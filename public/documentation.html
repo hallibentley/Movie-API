@@ -9,8 +9,91 @@
     <h2 class="section-title">Description</h2>
     <p>
       This API provides users with access to information about different movies,
-      directors, and genres. Users are able to sign up, update their personal
-      information, and create a list of their favorite movies.
+      directors, and genres. <br />
+      Users are able to sign up, update their personal information, and create a
+      list of their favorite movies.
     </p>
+
+    <table border="1">
+      <thead>
+        <h3>
+          <th>Business Logic</th>
+          <th>URL</th>
+          <th>Http Method</th>
+          <th>Request Body</th>
+          <th>Response Body</th>
+        </h3>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Get a list of all movies</td>
+          <td>/movies</td>
+          <td>GET</td>
+          <td>N/A</td>
+          <td>JSON with a list of all movies</td>
+        </tr>
+        <tr>
+          <td>Get data on a specific movie by title</td>
+          <td>/movies/[title]</td>
+          <td>GET</td>
+          <td>N/A</td>
+          <td>
+            JSON with detailed information on the specific movie requested.
+          </td>
+        </tr>
+        <tr>
+          <td>Get data on a specific genre by title</td>
+          <td>/movies/[genreName]</td>
+          <td>GET</td>
+          <td>N/A</td>
+          <td>JSON with detailed information about the requested genre</td>
+        </tr>
+        <tr>
+          <td>Get data on a specific director by name</td>
+          <td>/directors/[name]</td>
+          <td>GET</td>
+          <td>N/A</td>
+          <td>
+            JSON with detailed information on the specific director requested
+          </td>
+        </tr>
+        <tr>
+          <td>Register as a new user</td>
+          <td>/users</td>
+          <td>POST</td>
+          <td>JSON holding data for the new user</td>
+          <td>Text response "The new user has been successfully added"</td>
+        </tr>
+        <tr>
+          <td>Update your user info</td>
+          <td>/users/[id]</td>
+          <td>PUT</td>
+          <td>JSON holding the users infomation to be updated</td>
+          <td>
+            Text response "The users information has successfully been updated"
+          </td>
+        </tr>
+        <tr>
+          <td>Add a movie to your favorites list</td>
+          <td>/movies/[id]</td>
+          <td>POST</td>
+          <td>
+            JSON with the new movie information to be added to the favorites
+            list
+          </td>
+          <td>
+            Text response "The new movie has successfully been added to your
+            favorites list"
+          </td>
+        </tr>
+        <tr>
+          <td>Deregister an existing user</td>
+          <td>/users/[id]</td>
+          <td>DELETE</td>
+          <td>N/A</td>
+          <td>Text response "The user has successfully be deregistered"</td>
+        </tr>
+      </tbody>
+    </table>
   </body>
 </html>
