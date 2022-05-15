@@ -43,7 +43,7 @@
         </tr>
         <tr>
           <td>Get data on a specific genre by title</td>
-          <td>/movies/[genreName]</td>
+          <td>/movies/genre/[genreName]</td>
           <td>GET</td>
           <td>N/A</td>
           <td>JSON with detailed information about the requested genre</td>
@@ -66,7 +66,7 @@
         </tr>
         <tr>
           <td>Update your user info</td>
-          <td>/users/[id]</td>
+          <td>/users/[name]</td>
           <td>PUT</td>
           <td>JSON holding the users infomation to be updated</td>
           <td>
@@ -75,7 +75,7 @@
         </tr>
         <tr>
           <td>Add a movie to your favorites list</td>
-          <td>/movies/[id]</td>
+          <td>/movies/[title]</td>
           <td>POST</td>
           <td>
             JSON with the new movie information to be added to the favorites
@@ -88,7 +88,7 @@
         </tr>
         <tr>
           <td>Deregister an existing user</td>
-          <td>/users/[id]</td>
+          <td>/users/[name]</td>
           <td>DELETE</td>
           <td>N/A</td>
           <td>Text response "The user has successfully be deregistered"</td>

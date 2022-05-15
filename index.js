@@ -108,26 +108,26 @@ app.get("/movies", (req, res) => {
 //Request for data on a specific movie//
 app.get("/movies/:title", (req, res) => {
   res.json(allMovies.find((movie) => {
-    return movie.title === req.param.title
+    return movie.title === req.params.title
   }));
 });
 
 //Request for data on a genre//
-app.get("/movies/:genreName", (req, res) => {
+app.get("/movies/genre/:genreName", (req, res) => {
   res.json(allGenres.find((genre) => {
-    return genre.name === req.param.name
+    return genre.name === req.params.genreName
   }));
 });
 
 //Request for data on a director//
 app.get("/directors/:name", (req, res) => {
   res.json(allDirectors.find((director) => {
-    return director.name === req.param.name
+    return director.name === req.params.name
   }));
 });
 
 //Add a movie to favorites list//
-app.post("/movies/:id/", (req, res) => {
+app.post("/movies/:name/", (req, res) => {
   res.send("The new movie has successfully been added to your favorites list");
 });
 
@@ -138,27 +138,28 @@ app.post('/users', (req, res) => {
     const message = 'Missing "name" in request body';
     res.status(400).send(message);
   } else {
-    newUser.id = uuid.v4();
-    allUsers.push(newUsers);
     res.status(201).send(newUsers);
     res.send("The new user has successfully been added.");
   }
 });
 
 //Update a users info//
-app.put("/users/:id", (req, res) => {
+app.put("/users/:name", (req, res) => {
   res.send("The users information has successfully been updated");
 });
 
 //Deregister an existing user//
-app.delete('/users/:id', (req, res) => {
+app.delete('/users/:name', (req, res) => {
   let user = allUsers.find((user) => {
-    return user.id === req.params.id });
+    return user.name === req.params.name });
 
   if (user) {
     users = allUsers.filter((obj) =>
-    { return obj.id !== req.params.id });
-    res.status(201).send('User' + req.params.id + ' was deleted.');
+    { return obj.name !== req.params.name });
+    res.status(201).send('User' + req.params.name + ' was deleted.');
+  }
+  else {
+    res.status(404).send('User not found');
   }
 });
 
