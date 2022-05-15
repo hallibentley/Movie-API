@@ -1,9 +1,8 @@
 const express = require("express"),
       morgan = require("morgan"),
       bodyParser = require("body-parser"),
-      uuid = require("uuid");
 
-const app = express();
+app = express();
 
 let allMovies = [
   {
