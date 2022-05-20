@@ -1,165 +1,159 @@
-const express = require("express"),
-      morgan = require("morgan"),
-      bodyParser = require("body-parser"),
+const express = require("express");
+const morgan = require("morgan");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const models = require("./models.js");
 
-app = express();
+const movies = models.movie;
+const users = models.user;
 
-let allMovies = [
-  {
-    title: "Dirty Dancing",
-    release: "1987"
-  },
-  {
-    title: "The Big Short",
-    release: "2015"
-  },
-  {
-    title: "Catch Me If You Can",
-    release: "2002"
-  },
-  {
-    title: "Yesterday",
-    release: "2019"
-  },
-  {
-    title: "The Legend of Tarzan",
-    release: "2016"
-  }
-];
+const app = express();
 
-let allGenres = [
-  {
-    name: "Horror",
-    description: "Movies intended to frighten and thrill audiences."
-  },
-  {
-    name: "Family",
-    description: "Films that are fun for the entire family to watch together, from children to grandparents."
-  },
-  {
-    name: "Drama",
-    description:"Stories that revolve around character conflicts, both internal and external."
-  },
-  {
-    name: "Musical",
-    description: "If the main hook of the movie is a soundtrack, chances are it's a musical."
-  },
-  {
-    name: "Comedy",
-    description: "Movies designed to make people laugh."
-  }
-];
-
-let allDirectors = [
-  {
-    name: "Steven Spielberg",
-    birth_year: "1959"
-  },
-  {
-    name: "Martin Scorscese",
-    birth_year: "1942"
-  },
-  {
-    name: "Quentin Tarantino",
-    birth_year: "1963"
-  },
-  {
-    name: "Christopher Nolan",
-    birth_year: "1970"
-  },
-  {
-    name: "David Fincher",
-    birth_year: "1962"
-  }
-];
-
-let allUsers = [
-  {
-    name: "John Smith",
-    username: "JohnSmith",
-    password: "password123"
-  },
-  {
-    name: "Jane Doe",
-    username: "JaneDoe",
-    password: "123password"
-  }
-];
-
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(morgan("common"));
-app.use(bodyParser.json());
 
+mongoose.connect('mongodb://localhost:27017/movie-db', { useNewUrlParser: true, useUnifiedTopology: true });
+
+//Main page//
 app.get("/", (req, res) => {
   res.send("Welcome to my movie API!");
 });
 
+//Request for documentation//
 app.get("/documentation", (req, res) => {
   res.sendFile("public/documentation.html", { root: __dirname });
 });
 
 //Request for all movies//
 app.get("/movies", (req, res) => {
-  res.json(allMovies);
+  movies.find()
+  .then((movies) => {
+    res.status(201).json(movies);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 });
 
-//Request for data on a specific movie//
+//Request for data on a specific movie by title//
 app.get("/movies/:title", (req, res) => {
-  res.json(allMovies.find((movie) => {
-    return movie.title === req.params.title
-  }));
+  movies.findOne({title: req.params.title})
+  .then((movies) => {
+    res.json(user);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).send('Error' + err);
+  });
 });
 
-//Request for data on a genre//
+//Request for data on a genre by name//
 app.get("/movies/genre/:genreName", (req, res) => {
-  res.json(allGenres.find((genre) => {
-    return genre.name === req.params.genreName
-  }));
+  movies.find({'genre.name': req.params.genreName})
+  .then((movies) => {
+    res.json(movies);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).send('Error' + err);
+  });
 });
 
-//Request for data on a director//
-app.get("/directors/:name", (req, res) => {
-  res.json(allDirectors.find((director) => {
-    return director.name === req.params.name
-  }));
+//Request for data on a director by name//
+app.get("/movies/directors/:name", (req, res) => {
+  movies.findOne({ 'director.name' : req.params.name })
+  .then((director) => {
+    res.status(201).json(director)
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).send('Error' + err);
+  });
 });
 
 //Add a movie to favorites list//
-app.post("/movies/:name/", (req, res) => {
-  res.send("The new movie has successfully been added to your favorites list");
+app.post("/users/:username/movies/:movieID", (req, res) => {
+  users.findOneAndUpdate({username: req.params.username},
+    {$push: {favoriteMovies: req.params.movieID}
+  },
+  {new: true},
+  (err, updatedUser) =>
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error' + err);
+    }
+    else {
+      res.json(updatedUser);
+    }
+  });
 });
 
 //Register a new user//
 app.post('/users', (req, res) => {
-  let newUser = req.body;
-  if (!newUser.name) {
-    const message = 'Missing "name" in request body';
-    res.status(400).send(message);
-  } else {
-    res.status(201).send(newUsers);
-    res.send("The new user has successfully been added.");
-  }
+  users.findOne({username: req.body.username}),
+  .then((user) => {
+    if(user) {
+      return res.status(400).send(req.body.username + 'already exists');
+    }
+    else {
+      users
+        .create({
+          Username: req.body.username,
+          Password: req.body.password,
+          EmaiL: req.body.email,
+          Birthday: req.body.birthday
+        })
+        .then((user) => {res.status(201).json(user) })
+      .catch((err) => {
+        console.error(500).send('Error' + err);
+      })
+    }
+  })
+  .catch((error) => {
+    console.error(error);
+    res.status(500).send('Error' + error);
+  });
 });
 
 //Update a users info//
 app.put("/users/:name", (req, res) => {
-  res.send("The users information has successfully been updated");
+  users.findOneAndUpdate({username: req.params.username},
+  {$set:
+    {Username: req.body.username,
+    Password: req.body.password,
+    EmaiL: req.body.email,
+    Birthday: req.body.birthday
+    }
+  },
+  {new: true},
+  (err, updatedUser) => {
+    if(err) {
+      console.error(err);
+      res.status(500).send('Error' + err);
+    }
+    else {
+      res.json(updatedUser);
+    }
+  });
 });
 
 //Deregister an existing user//
 app.delete('/users/:name', (req, res) => {
-  let user = allUsers.find((user) => {
-    return user.name === req.params.name });
-
-  if (user) {
-    users = allUsers.filter((obj) =>
-    { return obj.name !== req.params.name });
-    res.status(201).send('User' + req.params.name + ' was deleted.');
-  }
-  else {
-    res.status(404).send('User not found');
-  }
+  users.findOneAndRemove({username: req.params.username})
+  .then((user) => {
+    if(!user) {
+      res.status(400).send(req.params.username + 'was not found');
+    }
+    else {
+      res.status(200).send(req.params.username + 'was deleted');
+    }
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).send('Error' + err);
+  });
 });
 
 app.use((err, req, res, next) => {
