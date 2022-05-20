@@ -92,7 +92,7 @@ app.post("/users/:username/movies/:movieID", (req, res) => {
 
 //Register a new user//
 app.post('/users', (req, res) => {
-  users.findOne({username: req.body.username}),
+  users.findOne({username: req.body.username}), 
   .then((user) => {
     if(user) {
       return res.status(400).send(req.body.username + 'already exists');
