@@ -61,37 +61,53 @@
           <td>Register as a new user</td>
           <td>/users</td>
           <td>POST</td>
-          <td>JSON holding data for the new user</td>
-          <td>Text response "The new user has been successfully added"</td>
+          <td>
+            {
+              <br>
+              Username: { type: String, required: true },
+              <br>
+              Password: { type: String, required: true },
+              <br>
+              Email: { type: String, required: true },
+              <br>
+              Birthday: Date
+              <br>
+            }
+          </td>
+          <td>Will return the new user info in JSON</td>
         </tr>
         <tr>
           <td>Update your user info</td>
           <td>/users/[name]</td>
           <td>PUT</td>
-          <td>JSON holding the users infomation to be updated</td>
           <td>
-            Text response "The users information has successfully been updated"
+            {
+              <br>
+              Username: { type: String, required: true },
+              <br>
+              Password: { type: String, required: true },
+              <br>
+              Email: { type: String, required: true },
+              <br>
+              Birthday: Date
+              <br>
+            }
           </td>
+          <td>Will return the updated user info in JSON</td>
         </tr>
         <tr>
           <td>Add a movie to your favorites list</td>
           <td>/users/[username]/movies/[movieID]</td>
           <td>POST</td>
-          <td>
-            JSON with the new movie information to be added to the favorites
-            list
-          </td>
-          <td>
-            Text response "The new movie has successfully been added to your
-            favorites list"
-          </td>
+          <td>N/A</td>
+          <td> Will return the user info with favorite movie added in JSON </td>
         </tr>
         <tr>
           <td>Deregister an existing user</td>
           <td>/users/[name]</td>
           <td>DELETE</td>
           <td>N/A</td>
-          <td>Text response "The user has successfully be deregistered"</td>
+          <td>Will return "[username] was deleted."</td>
         </tr>
       </tbody>
     </table>
