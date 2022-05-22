@@ -1,12 +1,14 @@
 const passport = require('passport');
-const LocalStrategy = require('passport-local');
+const LocalStrategy = require('passport-local').Strategy;
 const Models = require('./models.js');
 const passportJWT = require('passport-jwt');
 
 let Users = Models.User;
 let JWTStrategy = passportJWT.Strategy;
-let ExtractJWT = passport.ExtractJwt;
+let ExtractJWT = passportJWT.ExtractJwt;
 
+
+//Defining the strategy, LocalStrategy//
 passport.use(new LocalStrategy({
   usernameField: 'Username',
   passwordField: 'Password'
@@ -29,6 +31,7 @@ passport.use(new LocalStrategy({
   });
 }));
 
+//Defining the strategy, JWTStrategy//
 passport.use(new JWTStrategy({
   jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
   secretOrKey: 'your_jwt_secret'
