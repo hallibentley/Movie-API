@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const models = require("./models.js");
+const {check, validationResult} = require('express-validator');
 
 const Movies = models.Movie;
 const Users = models.User;
@@ -14,6 +15,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(morgan("common"));
 
+const cors = require('cors');
+app.use(cors());
 let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
@@ -79,6 +82,7 @@ app.get("/movies/directors/:name", passport.authenticate('jwt', {session: false}
 
 //Register a new user//
 app.post('/users', (req, res) => {
+  let hashedPassword = Users.hashPassword(req.body.Password);
   Users.findOne({Username: req.body.Username})
   .then((user) => {
     if(user) {
@@ -88,7 +92,7 @@ app.post('/users', (req, res) => {
       Users
         .create({
           Username: req.body.Username,
-          Password: req.body.Password,
+          Password: hashedPassword,
           Email: req.body.Email,
           Birthday: req.body.Birthday
         })
@@ -165,6 +169,7 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
 });
 
-app.listen(8080, () => {
-  console.log("listening on port 8080");
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () => {
+  console.log('Listening on Port' + port);
 });
