@@ -1,8 +1,14 @@
+//express is a node framework//
 const express = require("express");
+//morgan is a logging middleware for express//
 const morgan = require("morgan");
+//bodyParser allows you to read the req body using req.body//
 const bodyParser = require("body-parser");
+//mongoose is an object document mapper//
 const mongoose = require("mongoose");
+//importing our local models//
 const models = require("./models.js");
+//used for data validation via "check"//
 const {check, validationResult} = require('express-validator');
 
 const Movies = models.Movie;
@@ -188,6 +194,7 @@ app.delete('/users/:username', passport.authenticate('jwt', {session: false}), (
   });
 });
 
+//error handling functions take 4 arguements rather than 3//
 app.use((err, req, res, next) => {
   console.error(err.stack);
 });

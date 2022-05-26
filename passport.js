@@ -1,3 +1,4 @@
+//passport is an authentication middleware for express - uses startegies//
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const Models = require('./models.js');
@@ -8,7 +9,7 @@ let JWTStrategy = passportJWT.Strategy;
 let ExtractJWT = passportJWT.ExtractJwt;
 
 
-//Defining the strategy, LocalStrategy//
+//Defining the passport strategy, LocalStrategy for basic HTTP auth login requests//
 passport.use(new LocalStrategy({
   usernameField: 'Username',
   passwordField: 'Password'
@@ -34,7 +35,7 @@ passport.use(new LocalStrategy({
   });
 }));
 
-//Defining the strategy, JWTStrategy//
+//Defining the passport strategy, JWTStrategy for JWT submitted requests//
 passport.use(new JWTStrategy({
   jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
   secretOrKey: 'your_jwt_secret'

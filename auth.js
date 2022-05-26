@@ -1,8 +1,10 @@
+//the key used in the JWTStrategy//
 const jwtSecret = 'your_jwt_secret';
 
 const jwt = require('jsonwebtoken');
+//passport is an authentication middleware for express - uses strategies//
 const passport = require('passport');
-
+//importing our local passport file//
 require('./passport');
 
 let generateJWTToken = (user) => {
