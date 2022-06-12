@@ -98,6 +98,22 @@ app.get("/users", passport.authenticate('jwt', { session: false }), function (re
     });
 });
 
+//Get specific user//
+app.get('/users/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
+  Users.findOne({ Username: req.params.username })
+    .then((user) => {
+      if (!user) {
+        res.status(404).send(req.params.username + ' was not found');
+      } else {
+        res.json(user);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
 //Register a new user//
 app.post('/users',
   [
