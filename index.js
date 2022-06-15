@@ -208,22 +208,22 @@ app.post("/users/:username/movies/:movieID", passport.authenticate('jwt', { sess
 });
 
 //Remove a movie from the favorites list//
-// app.delete("/users/:username/movies/:movieID", passport.authenticate('jwt', { session: false }), (req, res) => {
-//   Users.findOneAndUpdate({ Username: req.params.username },
-//     {
-//       $pull: { FavouriteMovies: req.params.movieID }
-//     },
-//     { new: true },
-//     (err, updatedUser) => {
-//       if (err) {
-//         console.error(err);
-//         res.status(500).send('Error' + err);
-//       }
-//       else {
-//         res.json(updatedUser);
-//       }
-//     });
-// });
+app.delete("/users/:username/movies/:movieID", passport.authenticate('jwt', { session: false }), (req, res) => {
+  Users.findOneAndUpdate({ Username: req.params.username },
+    {
+      $pull: { FavouriteMovies: req.params.movieID }
+    },
+    { new: true },
+    (err, updatedUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error' + err);
+      }
+      else {
+        res.json(updatedUser);
+      }
+    });
+});
 
 //Deregister an existing user//
 app.delete('/users/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
