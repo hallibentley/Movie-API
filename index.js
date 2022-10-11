@@ -41,6 +41,11 @@ app.get("/documentation", (req, res) => {
   res.sendFile("public/documentation.html", { root: __dirname });
 });
 
+/**
+ * GET a list of ALL movies to the user
+ * @returns movie data
+ */
+
 //Request for all movies//
 app.get("/movies", passport.authenticate('jwt', { session: false }), function (req, res) {
   Movies.find()
@@ -51,6 +56,11 @@ app.get("/movies", passport.authenticate('jwt', { session: false }), function (r
       console.error(err);
     });
 });
+
+/**
+ * GET data (description, genre, director, image URL, whether it’s featured or not) about a single movie by title to the user
+ * @returns data for single movie
+ */
 
 //Request for data on a specific movie by title//
 app.get("/movies/:title", passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -64,6 +74,11 @@ app.get("/movies/:title", passport.authenticate('jwt', { session: false }), (req
     });
 });
 
+/**
+ * GET data about a genre (description) by name/title (e.g., "The Dark Knight")
+ * @returns genre data
+ */
+
 //Request for data on a genre by name//
 app.get("/movies/genre/:genreName", passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ 'Genre.Name': req.params.genreName })
@@ -75,6 +90,11 @@ app.get("/movies/genre/:genreName", passport.authenticate('jwt', { session: fals
       res.status(500).send('Error' + err);
     });
 });
+
+/**
+ * GET data about a director (bio, birth year, death year) by name
+ * @returns director details
+ */
 
 //Request for data on a director by name//
 app.get("/movies/directors/:name", passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -88,6 +108,11 @@ app.get("/movies/directors/:name", passport.authenticate('jwt', { session: false
     });
 });
 
+/**
+ * GET a list of ALL users
+ * @returns user list
+ */
+
 //Get all users//
 app.get("/users", passport.authenticate('jwt', { session: false }), function (req, res) {
   Users.find()
@@ -98,6 +123,11 @@ app.get("/users", passport.authenticate('jwt', { session: false }), function (re
       console.error(err);
     });
 });
+
+/**
+ * GET user by username
+ * @returns user data
+ */
 
 //Get specific user//
 app.get('/users/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -114,6 +144,18 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), (r
       res.status(500).send('Error: ' + err);
     });
 });
+
+/**
+ * CREATE - register new users
+Expected JSON Format
+{ 
+  ID: Integer,
+  Username: String,
+  Password: String,
+  Email: String,
+  Birthday: Date
+}
+ */
 
 //Register a new user//
 app.post('/users',
@@ -154,6 +196,19 @@ app.post('/users',
       });
   });
 
+/** UPDATE - allow users to update their username
+  * Expected JSON format
+  * {
+  * Username: String,
+  * (required)
+  * Password: String,
+  * (required)
+  * Email: String,
+  * (required)
+  * Birthday: Date
+  * }
+  */
+
 //Update a users info//
 app.put("/users/:username",
   [
@@ -190,6 +245,11 @@ app.put("/users/:username",
       });
   });
 
+/**
+ * PUT - Allow users to add a movie to their list of favorites (showing only a text that a movie has been added—more on this later)
+ * @returns updated user
+ */
+
 //Add a movie to favorites list//
 app.post("/users/:username/movies/:movieId", passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.username },
@@ -208,6 +268,10 @@ app.post("/users/:username/movies/:movieId", passport.authenticate('jwt', { sess
     });
 });
 
+/**
+ * DELETE - Allow users to remove a movie from their list of favorites (showing only a text that a movie has been removed—more on this later)
+ */
+
 //Remove a movie from the favorites list//
 app.delete("/users/:username/movies/:movieId", passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.username },
@@ -225,6 +289,10 @@ app.delete("/users/:username/movies/:movieId", passport.authenticate('jwt', { se
       }
     });
 });
+
+/**
+ * DELETE - Allow existing users to deregister (showing only a text that a user email has been removed—more on this later)
+ */
 
 //Deregister an existing user//
 app.delete('/users/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
